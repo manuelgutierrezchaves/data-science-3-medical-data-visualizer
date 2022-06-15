@@ -10,7 +10,6 @@ df = pd.read_csv("medical_examination.csv")
 df['overweight'] = 1
 df.loc[df.weight / (df.height / 100) ** 2 > 25, "overweight"] = 1
 df.loc[df.weight / (df.height / 100) ** 2 <= 25, "overweight"] = 0
-print(df)
 
 
 # Normalize data by making 0 always good and 1 always bad. If the value of 'cholesterol' or 'gluc' is 1, make the value 0. If the value is more than 1, make the value 1.
@@ -18,10 +17,6 @@ df.loc[df.cholesterol == 1, "cholesterol"] = 0
 df.loc[df.cholesterol > 1, "cholesterol"] = 1
 df.loc[df.gluc == 1, "gluc"] = 0
 df.loc[df.gluc > 1, "gluc"] = 1
-
-print(df["cholesterol"])
-print(df["gluc"])
-
 
 # Draw Categorical Plot
 def draw_cat_plot():
@@ -32,8 +27,7 @@ def draw_cat_plot():
     df_cat = df_cat.groupby(["cardio","variable","value"])["variable"].count().reset_index(name ='total')
 
     # Draw the catplot with 'sns.catplot()'
-    fig = sns.catplot(x="variable", y="total", hue="value", col="cardio", data=df_cat, kind="bar")
-
+    fig = sns.catplot(x="variable", y="total", hue="value", col="cardio", data=df_cat, kind="bar").fig
 
     # Do not modify the next two lines
     fig.savefig('catplot.png')
@@ -52,24 +46,16 @@ def draw_heat_map():
     mask = np.zeros_like(corr + 1)
     mask[np.triu_indices_from(mask)] = True
 
-
     # Set up the matplotlib figure
     fig, ax = plt.subplots()
 
     # Draw the heatmap with 'sns.heatmap()'
     ax = sns.heatmap(corr, mask=mask, annot=True, fmt=".1f")
 
-
     # Do not modify the next two lines
     fig.savefig('heatmap.png')
     return fig
 
 
-
-fig = draw_cat_plot()
-
-ax = fig.axes[0]
-print(ax)
-
-#actual = ax.get_xlabel()
-#print(actual)
+draw_cat_plot()
+draw_heat_map()
